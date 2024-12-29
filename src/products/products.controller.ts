@@ -9,7 +9,7 @@ import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @MessagePattern({ cmd: 'create' })
+  @MessagePattern('product_create')
   create(@Payload() createProductDto: CreateProductDto) {
     try {
       return this.productsService.create(createProductDto);
@@ -18,7 +18,7 @@ export class ProductsController {
     }
   }
 
-  @MessagePattern({ cmd: 'find_all' })
+  @MessagePattern('product_find_all')
   findAll(@Payload() paginationDto: PaginationDto) {
     try {
       return this.productsService.findAll(paginationDto);
@@ -27,7 +27,7 @@ export class ProductsController {
     }
   }
 
-  @MessagePattern({ cmd: 'find_one' })
+  @MessagePattern('product_find_one')
   findOne(@Payload('id', ParseIntPipe) id: number) {
     try {
       return this.productsService.findOne(id);
@@ -36,7 +36,7 @@ export class ProductsController {
     }
   }
 
-  @MessagePattern({ cmd: 'update' })
+  @MessagePattern('product_update')
   update(@Payload() updateProductDto: UpdateProductDto) {
     try {
       return this.productsService.update(updateProductDto.id, updateProductDto);
@@ -45,7 +45,7 @@ export class ProductsController {
     }
   }
 
-  @MessagePattern({ cmd: 'delete' })
+  @MessagePattern('product_delete')
   remove(@Payload('id', ParseIntPipe) id: number) {
     try {
       return this.productsService.remove(id);
@@ -54,7 +54,7 @@ export class ProductsController {
     }
   }
 
-  @MessagePattern({ cmd: 'validate' })
+  @MessagePattern('product_validate')
   validateProducts(@Payload() ids: number[]) {
     try {
       return this.productsService.validate(ids);

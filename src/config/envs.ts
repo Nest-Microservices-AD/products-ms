@@ -5,6 +5,7 @@ const envsSchema = joi
   .object({
     PORT: joi.number().required(),
     DATABASE_URL: joi.string().required(),
+    NATS_SERVERS: joi.string().required(),
   })
   .unknown(true);
 
@@ -16,9 +17,11 @@ if (error) {
 const envValues: {
   PORT: number;
   DATABASE_URL: string;
+  NATS_SERVERS: string;
 } = value;
 
 export const envs = {
   port: envValues.PORT,
   DATABASE_URL: envValues.DATABASE_URL,
+  NATS_SERVERS: envValues.NATS_SERVERS.split(','),
 };
