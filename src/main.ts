@@ -1,8 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import {
+  HttpStatus,
+  Logger,
+  ValidationError,
+  ValidationPipe,
+} from '@nestjs/common';
 import { envs } from './config/envs';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import {
+  MicroserviceOptions,
+  RpcException,
+  Transport,
+} from '@nestjs/microservices';
 
 async function bootstrap() {
   const logger = new Logger('Products-Main');
@@ -14,8 +23,18 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: (validationErrors: ValidationError[] = []) => {
+        return new RpcException({
+          status: HttpStatus.BAD_REQUEST,
+          message: validationErrors.map((error) => ({
+            field: error.property,
+            error: Object.values(error.constraints).join(', '),
+          })),
+        });
+      },
     }),
   );
+  await app.listen();
   logger.verbose(`Products microservice running on port ${envs.port}`);
 }
 bootstrap();
